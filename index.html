@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cineon</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b0b10;color:#fff;font-family:Arial,sans-serif}
+header{padding:18px;background:#11111a;position:sticky;top:0}
+.logo{font-size:28px;font-weight:800;color:#e50914}.sub{color:#aaa;font-size:13px;margin-top:4px}
+main{padding:18px}.search{width:100%;padding:14px;border-radius:12px;border:1px solid #333;background:#181820;color:#fff;font-size:16px}
+h2{margin-top:24px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:#15151d;border-radius:14px;overflow:hidden;border:1px solid #292934}
+.poster{height:190px;background:linear-gradient(135deg,#27274a,#111);display:flex;align-items:center;justify-content:center;font-size:42px}
+.info{padding:12px}.title{font-weight:700}.type{color:#aaa;font-size:12px;margin-top:5px}
+button{margin-top:10px;width:100%;padding:10px;border:0;border-radius:9px;background:#e50914;color:#fff;font-weight:700}
+.empty{color:#aaa;text-align:center;padding:30px 10px;display:none}
+footer{text-align:center;color:#777;padding:30px 10px;font-size:12px}
+</style>
+</head>
+<body>
+<header><div class="logo">CINEON</div><div class="sub">Filmes e séries</div></header>
+<main>
+<input id="search" class="search" placeholder="🔎 Pesquisar filmes e séries">
+<h2>Catálogo</h2>
+<div id="grid" class="grid"></div>
+<div id="empty" class="empty">Nenhum título encontrado.</div>
+</main>
+<footer>Cineon • Protótipo do aplicativo</footer>
+<script>
+const catalog=[
+ {title:"Filme de exemplo",type:"Filme"},
+ {title:"Série de exemplo",type:"Série"},
+ {title:"Aventura",type:"Filme"},
+ {title:"Mistério",type:"Série"}
+];
+const grid=document.getElementById("grid"), search=document.getElementById("search"), empty=document.getElementById("empty");
+function render(){
+ const q=search.value.toLowerCase();
+ const list=catalog.filter(x=>x.title.toLowerCase().includes(q));
+ grid.innerHTML=list.map(x=>`<div class="card"><div class="poster">🎬</div><div class="info"><div class="title">${x.title}</div><div class="type">${x.type}</div><button onclick="alert('Adicione aqui o link oficial/licenciado do conteúdo.')">Abrir</button></div></div>`).join("");
+ empty.style.display=list.length?"none":"block";
+}
+search.addEventListener("input",render); render();
+</script>
+</body>
+</html>
