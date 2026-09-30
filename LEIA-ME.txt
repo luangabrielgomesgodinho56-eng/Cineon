@@ -1,0 +1,5 @@
+CINEON — primeira versão
+Abra index.html no navegador do celular ou computador.
+Esta é uma versão visual/funcional de protótipo. Os títulos mostrados são apenas exemplos.
+Para publicar filmes e séries reais, use somente conteúdo para o qual você tenha direitos/licença.
+Próximo passo: transformar este protótipo em aplicativo Android (APK) e conectar um catálogo autorizado.

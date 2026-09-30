@@ -2,46 +2,63 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Cineon</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#0b0b10;color:#fff;font-family:Arial,sans-serif}
-header{padding:18px;background:#11111a;position:sticky;top:0}
-.logo{font-size:28px;font-weight:800;color:#e50914}.sub{color:#aaa;font-size:13px;margin-top:4px}
-main{padding:18px}.search{width:100%;padding:14px;border-radius:12px;border:1px solid #333;background:#181820;color:#fff;font-size:16px}
-h2{margin-top:24px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.card{background:#15151d;border-radius:14px;overflow:hidden;border:1px solid #292934}
-.poster{height:190px;background:linear-gradient(135deg,#27274a,#111);display:flex;align-items:center;justify-content:center;font-size:42px}
-.info{padding:12px}.title{font-weight:700}.type{color:#aaa;font-size:12px;margin-top:5px}
-button{margin-top:10px;width:100%;padding:10px;border:0;border-radius:9px;background:#e50914;color:#fff;font-weight:700}
-.empty{color:#aaa;text-align:center;padding:30px 10px;display:none}
-footer{text-align:center;color:#777;padding:30px 10px;font-size:12px}
+:root{--bg:#050505;--card:#111;--red:#e50914;--text:#fff;--muted:#aaa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#050505ee;backdrop-filter:blur(10px);padding:16px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:25px;font-weight:900}.logo span{color:var(--red)}
+button{border:0;border-radius:10px;padding:11px 16px;background:var(--red);color:white;font-weight:700}
+main{padding:0 16px 85px}.hero{height:270px;border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(90deg,#160000 0%,#350307 45%,#111 100%);margin-bottom:22px}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#050505 0%,transparent 65%)}
+.heroText{position:absolute;z-index:2;left:18px;bottom:20px;max-width:75%}.hero h1{font-size:28px;margin:0 0 7px}.hero p{color:#ddd;margin:0 0 12px}
+h2{font-size:20px;margin:20px 0 12px}.row{display:flex;gap:12px;overflow:auto;padding-bottom:6px}.movie{min-width:125px}.poster{height:180px;border-radius:10px;background:linear-gradient(145deg,#250000,#090909);display:flex;align-items:end;padding:10px;font-weight:800;font-size:16px;border:1px solid #222}.movie small{display:block;margin-top:7px;color:#ddd}.search{display:none;margin:0 0 18px}.search input{width:100%;padding:14px;border-radius:12px;border:1px solid #333;background:#121212;color:white;font-size:16px}.cats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cat{padding:22px 10px;border:1px solid #3a1010;border-radius:12px;background:#140707;text-align:center}.details{display:none}.details .big{height:260px;border-radius:15px;background:linear-gradient(145deg,#550007,#080808);padding:18px;display:flex;align-items:end;font-size:30px;font-weight:900}.details p{color:#ccc;line-height:1.5}.fav{color:#ffb0b0}.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0bf5;border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:10}.nav button{background:transparent;color:#aaa;padding:5px 8px;font-size:12px}.nav button.active{color:var(--red)}.empty{color:#888;text-align:center;padding:50px 10px}
 </style>
 </head>
 <body>
-<header><div class="logo">CINEON</div><div class="sub">Filmes e séries</div></header>
+<header><div class="logo">CINE<span>ON</span></div><button onclick="toggleSearch()">🔎</button></header>
 <main>
-<input id="search" class="search" placeholder="🔎 Pesquisar filmes e séries">
-<h2>Catálogo</h2>
-<div id="grid" class="grid"></div>
-<div id="empty" class="empty">Nenhum título encontrado.</div>
+<div id="search" class="search"><input id="q" placeholder="Buscar filmes, séries..." oninput="searchMovies()"></div>
+
+<section id="home">
+<div class="hero"><div class="heroText"><h1>Grandes histórias</h1><p>Seu mundo de filmes e séries em um só lugar.</p><button onclick="openMovie('Destaque')">▶ Assistir</button></div></div>
+<h2>Em alta</h2><div class="row" id="popular"></div>
+<h2>Lançamentos</h2><div class="row" id="new"></div>
+</section>
+
+<section id="categories" style="display:none"><h2>Categorias</h2><div class="cats" id="cats"></div></section>
+<section id="favorites" style="display:none"><h2>Favoritos</h2><div class="row" id="fav"></div></section>
+<section id="profile" style="display:none"><h2>Perfil</h2><div class="cat">👤<br><br><b>Meu perfil</b><br><small>Configurações e histórico</small></div></section>
+<section id="detail" class="details"></section>
 </main>
-<footer>Cineon • Protótipo do aplicativo</footer>
+
+<nav class="nav">
+<button class="active" onclick="show('home',this)">⌂<br>Início</button>
+<button onclick="show('categories',this)">▦<br>Filmes</button>
+<button onclick="show('categories',this)">▣<br>Séries</button>
+<button onclick="show('favorites',this)">♡<br>Favoritos</button>
+<button onclick="show('profile',this)">♙<br>Perfil</button>
+</nav>
+
 <script>
-const catalog=[
- {title:"Filme de exemplo",type:"Filme"},
- {title:"Série de exemplo",type:"Série"},
- {title:"Aventura",type:"Filme"},
- {title:"Mistério",type:"Série"}
+const movies=[
+["Deadpool & Wolverine","Ação • Comédia","2024"],["The Batman","Ação • Crime","2022"],
+["Duna: Parte Dois","Ficção científica","2024"],["Gladiador II","Ação • Drama","2024"],
+["John Wick","Ação • Suspense","2014"],["Interestelar","Ficção científica","2014"],
+["Stranger Things","Ficção científica • Drama","Série"],["O Senhor dos Anéis","Fantasia","2001"]
 ];
-const grid=document.getElementById("grid"), search=document.getElementById("search"), empty=document.getElementById("empty");
-function render(){
- const q=search.value.toLowerCase();
- const list=catalog.filter(x=>x.title.toLowerCase().includes(q));
- grid.innerHTML=list.map(x=>`<div class="card"><div class="poster">🎬</div><div class="info"><div class="title">${x.title}</div><div class="type">${x.type}</div><button onclick="alert('Adicione aqui o link oficial/licenciado do conteúdo.')">Abrir</button></div></div>`).join("");
- empty.style.display=list.length?"none":"block";
-}
-search.addEventListener("input",render); render();
+let favorites=JSON.parse(localStorage.getItem('cineonFav')||'[]');
+function card(m,i){return `<div class="movie" onclick="openMovie(${i})"><div class="poster">${m[0]}</div><small>${m[0]}</small></div>`}
+function render(){popular.innerHTML=movies.slice(0,5).map((m,i)=>card(m,i)).join('');new.innerHTML=movies.slice(2,7).map((m,i)=>card(m,i+2)).join('');renderFav()}
+function renderFav(){fav.innerHTML=favorites.length?favorites.map(i=>card(movies[i],i)).join(''):'<div class="empty">Nenhum título nos favoritos.</div>'}
+function show(id,btn){document.querySelectorAll('main>section').forEach(x=>x.style.display='none');document.getElementById(id).style.display=id==='detail'?'block':'block';document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active')}
+function openMovie(i){let m=typeof i==='number'?movies[i]:[i,'Filmes e séries',''];detail.innerHTML=`<div class="big">${m[0]}</div><h1>${m[0]}</h1><p>${m[1]} • ${m[2]}</p><p>Uma grande história para assistir no Cineon. Esta área pode receber a descrição, elenco, temporadas e episódios quando o catálogo estiver configurado.</p><button onclick="alert('Área de reprodução pronta para receber um vídeo autorizado.')">▶ Assistir agora</button> <button style="background:#222" onclick="toggleFav(${typeof i==='number'?i:0})">♡ Favorito</button>`;show('detail')}
+function toggleFav(i){favorites=favorites.includes(i)?favorites.filter(x=>x!==i):[...favorites,i];localStorage.setItem('cineonFav',JSON.stringify(favorites));renderFav();openMovie(i)}
+function toggleSearch(){search.style.display=search.style.display==='block'?'none':'block';q.focus()}
+function searchMovies(){let s=q.value.toLowerCase();let arr=movies.map((m,i)=>[m,i]).filter(x=>x[0][0].toLowerCase().includes(s));home.style.display='none';categories.style.display='none';favorites.style.display='none';profile.style.display='none';detail.style.display='block';detail.innerHTML='<h2>Resultados</h2><div class="row">'+(arr.length?arr.map(x=>card(x[0],x[1])).join(''):'<div class="empty">Nenhum título encontrado.</div>')+'</div>'}
+cats.innerHTML=['Ação','Comédia','Drama','Terror','Ficção científica','Suspense','Animação','Romance','Documentário','Família'].map(x=>`<div class="cat" onclick="alert('Categoria: ${x}')">${x}</div>`).join('');
+render();
 </script>
 </body>
 </html>
